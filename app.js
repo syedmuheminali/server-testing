@@ -1,18 +1,27 @@
 const express = require("express");
+const serverless = require("serverless-http");
+
 const app = express();
 
+// middleware
+app.use(express.json());
 
-const PORT = 5000
+// routes
+app.get("/", (req, res) => {
+  res.json({ message: "API Working ✅" });
+});
 
+app.get("/user", (req, res) => {
+  res.json({ name: "Coding Guy", city: "Karachi" });
+});
 
+// 👇 LOCAL RUN (IMPORTANT)
+if (process.env.NODE_ENV !== "production") {
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
-app.get("/",(req,res) =>{
-    res.send("Hello World!")
-})
-
-
-
-// listening to server
-
-app.listen(PORT,() => console.log(`Your server is running on ${PORT}`))
-
+// 👇 VERCEL EXPORT
+module.exports = serverless(app);
